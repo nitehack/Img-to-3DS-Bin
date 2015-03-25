@@ -6,11 +6,7 @@ IMG TO 3DS BIN
 """
 import sys
 
-orig=sys.argv[1]
-dest=sys.argv[2]
-
-
-def alineamiento(num):
+def alignment(num):
     alin=0
     if (num%4) != 0:
         c=int(num/4)
@@ -20,7 +16,18 @@ def alineamiento(num):
 hmax_3ds=400
 vmax_3ds=240
 
-imagen=open(orig,"rb")
+try:
+    orig=sys.argv[1]
+    dest=sys.argv[2]
+except:
+    print "Usage: python img-to-3ds-bin.py image.bmp image.bin"
+    exit()
+
+try:
+    imagen=open(orig,"rb")
+except:
+    print "EROR: The image file is not found. Check that the route is correct"
+    exit()
 
 imagen.seek(0x02)
 tam_file=imagen.read(4)
@@ -53,7 +60,7 @@ tam_img_total=int(tam_imagen[::-1].encode("hex"),16)
 
 num_pix=height*width
 imagen_bin=""
-alin=alineamiento(width*3) #alineamiento tiene que ser cada linea multiplo de 4
+alin=alignment(width*3) #alineamiento tiene que ser cada linea multiplo de 4
 
 
 #identificar distintos tipos de codificaciones, futuro
@@ -73,11 +80,15 @@ if (width<=hmax_3ds) and (height<=vmax_3ds):
                 for i in range(height):
                     k=i*(width*saltos+alin)+j*saltos
                     imagen_bin+=datos_imagen[k:(k+saltos)] #ordenamos los datos
-            bin_file=open(dest,"w")
+            try:
+                bin_file=open(dest,"w")
+            except:
+                print "ERROR: There was a problem creating the file"
+                exit()
+
             bin_file.write(imagen_bin)
             bin_file.close()
             print "Creado satisfactoriamente"
 
-#Dar codigo de error si no funciona
             
 imagen.close()
