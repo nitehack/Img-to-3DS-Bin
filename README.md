@@ -6,5 +6,5 @@ python img-to-3ds-bin.py img-origin.bmp img-destination.bin
 ```
 ##Changelog
 ---------
-##v1.0 
+##v0.1 
 * BMP format 24bits uncompressed implemented
